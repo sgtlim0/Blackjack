@@ -14,9 +14,11 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  transition: all var(--transition);
+  transition: all 80ms ease;
   color: #fff;
   min-width: 80px;
+  position: relative;
+  transform: translateY(0);
 }
 
 .button:disabled {
@@ -24,35 +26,46 @@
   cursor: not-allowed;
 }
 
+.button:not(:disabled):hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
 .button:not(:disabled):active {
-  transform: scale(0.95);
+  transform: translateY(3px);
+  box-shadow: none !important;
+  filter: brightness(0.95);
+  transition: all 30ms ease;
 }
 
 .hit {
   background: linear-gradient(180deg, #27ae60 0%, #1e8449 100%);
-  box-shadow: 0 3px 0 #145a30, 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 0 #145a30, 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 .hit:not(:disabled):hover {
   background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+  box-shadow: 0 5px 0 #145a30, 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .stand {
   background: linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
-  box-shadow: 0 3px 0 #922b21, 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 0 #922b21, 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 .stand:not(:disabled):hover {
   background: linear-gradient(180deg, #ff5e4f 0%, #e74c3c 100%);
+  box-shadow: 0 5px 0 #922b21, 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .double {
   background: linear-gradient(180deg, #f39c12 0%, #d68910 100%);
-  box-shadow: 0 3px 0 #a6730e, 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 0 #a6730e, 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 .double:not(:disabled):hover {
   background: linear-gradient(180deg, #f5b041 0%, #f39c12 100%);
+  box-shadow: 0 5px 0 #a6730e, 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 @media (min-width: 480px) {

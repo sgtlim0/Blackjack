@@ -1,4 +1,6 @@
+import { useCallback } from 'react'
 import { useBlackjack } from './hooks/useBlackjack.ts'
+import { useSoundEffects } from './hooks/useSoundEffects.ts'
 import Table from './components/Table/Table.tsx'
 import Hand from './components/Hand/Hand.tsx'
 import Controls from './components/Controls/Controls.tsx'
@@ -27,15 +29,62 @@ export default function App() {
     toggleAdvisor,
   } = useBlackjack()
 
+  const { muted, toggleMute, playChipClick, playButtonPress, playStand: playSfxStand, playDouble: playSfxDouble, hapticLight } = useSoundEffects({
+    phase: state.phase,
+    result: state.result,
+    playerCardCount: state.playerHand.length,
+    dealerCardCount: state.dealerHand.length,
+  })
+
   const isBetting = state.phase === 'betting'
   const isPlayerTurn = state.phase === 'playerTurn'
   const isResult = state.phase === 'result'
+
+  const handleHit = useCallback(() => {
+    playButtonPress()
+    hapticLight()
+    hit()
+  }, [hit, playButtonPress, hapticLight])
+
+  const handleStand = useCallback(() => {
+    playSfxStand()
+    hapticLight()
+    stand()
+  }, [stand, playSfxStand, hapticLight])
+
+  const handleDouble = useCallback(() => {
+    playSfxDouble()
+    hapticLight()
+    doubleDown()
+  }, [doubleDown, playSfxDouble, hapticLight])
+
+  const handleDeal = useCallback(() => {
+    playButtonPress()
+    hapticLight()
+    deal()
+  }, [deal, playButtonPress, hapticLight])
+
+  const handleNextHand = useCallback(() => {
+    playButtonPress()
+    hapticLight()
+    nextHand()
+  }, [nextHand, playButtonPress, hapticLight])
+
+  const handleBetChange = useCallback((bet: number) => {
+    playChipClick()
+    setBet(bet)
+  }, [setBet, playChipClick])
 
   return (
     <div className={styles.app}>
       <header className={styles.header}>
         <span className={styles.title}>Neon Blackjack</span>
-        <ChipDisplay amount={state.playerChips} />
+        <div className={styles.headerRight}>
+          <button className={styles.muteButton} onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}>
+            {muted ? '\uD83D\uDD07' : '\uD83D\uDD0A'}
+          </button>
+          <ChipDisplay amount={state.playerChips} />
+        </div>
       </header>
 
       <div className={styles.tableWrapper}>
@@ -76,9 +125,9 @@ export default function App() {
       {isPlayerTurn && (
         <>
           <Controls
-            onHit={hit}
-            onStand={stand}
-            onDouble={doubleDown}
+            onHit={handleHit}
+            onStand={handleStand}
+            onDouble={handleDouble}
             canDouble={canDouble}
             disabled={false}
           />
@@ -94,11 +143,11 @@ export default function App() {
         <BettingPanel
           chips={state.playerChips}
           currentBet={state.currentBet}
-          onBetChange={setBet}
-          onDeal={deal}
+          onBetChange={handleBetChange}
+          onDeal={handleDeal}
           stats={state.stats}
           isResult={isResult}
-          onNextHand={nextHand}
+          onNextHand={handleNextHand}
         />
       )}
 

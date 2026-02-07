@@ -68,12 +68,20 @@
   color: var(--gold-light);
   font-size: 0.75rem;
   font-weight: 600;
-  transition: all var(--transition);
+  transition: all 80ms ease;
+  transform: scale(1);
 }
 
 .quickBetChip:not(:disabled):hover {
   background: rgba(201, 168, 76, 0.25);
   border-color: var(--gold);
+  transform: scale(1.05);
+}
+
+.quickBetChip:not(:disabled):active {
+  transform: scale(0.92);
+  background: rgba(201, 168, 76, 0.35);
+  transition: all 30ms ease;
 }
 
 .quickBetChip:disabled {
@@ -91,16 +99,22 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  box-shadow: 0 3px 0 #7a6020, 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: all var(--transition);
+  box-shadow: 0 4px 0 #7a6020, 0 6px 16px rgba(0, 0, 0, 0.35);
+  transition: all 80ms ease;
+  transform: translateY(0);
 }
 
 .dealButton:not(:disabled):hover {
   background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 #7a6020, 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .dealButton:not(:disabled):active {
-  transform: scale(0.95);
+  transform: translateY(4px);
+  box-shadow: none;
+  filter: brightness(0.95);
+  transition: all 30ms ease;
 }
 
 .dealButton:disabled {
