@@ -1,0 +1,42 @@
+.display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chip {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.chipInner {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #1a1a2e;
+}
+
+.amount {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold-light);
+}
+
+@media (min-width: 480px) {
+  .chip {
+    width: 32px;
+    height: 32px;
+  }
+  .chipInner {
+    font-size: 0.8rem;
+  }
+  .amount {
+    font-size: 1.15rem;
+  }
+}

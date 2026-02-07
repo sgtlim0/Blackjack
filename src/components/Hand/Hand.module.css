@@ -1,0 +1,88 @@
+.hand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.labelText {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.score {
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2px 10px;
+  border-radius: 12px;
+  color: var(--text-primary);
+  min-width: 32px;
+  text-align: center;
+}
+
+.bust {
+  background: rgba(231, 76, 60, 0.6);
+  color: #fff;
+}
+
+.blackjack {
+  background: rgba(201, 168, 76, 0.6);
+  color: #fff;
+}
+
+.cards {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  min-height: var(--card-height);
+}
+
+.cardSlot {
+  position: relative;
+  margin-left: -12px;
+}
+
+.cardSlot:first-child {
+  margin-left: 0;
+}
+
+.active .labelText {
+  color: var(--gold);
+}
+
+.active .cards {
+  filter: drop-shadow(0 0 12px rgba(201, 168, 76, 0.3));
+}
+
+@media (min-width: 480px) {
+  .labelText {
+    font-size: 0.85rem;
+  }
+  .score {
+    font-size: 0.95rem;
+    padding: 3px 12px;
+  }
+  .cardSlot {
+    margin-left: -8px;
+  }
+}
+
+@media (min-width: 768px) {
+  .cardSlot {
+    margin-left: -4px;
+  }
+  .label {
+    gap: 12px;
+  }
+}

@@ -1,0 +1,68 @@
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all var(--transition);
+  color: #fff;
+  min-width: 80px;
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.button:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+.hit {
+  background: linear-gradient(180deg, #27ae60 0%, #1e8449 100%);
+  box-shadow: 0 3px 0 #145a30, 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.hit:not(:disabled):hover {
+  background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.stand {
+  background: linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
+  box-shadow: 0 3px 0 #922b21, 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.stand:not(:disabled):hover {
+  background: linear-gradient(180deg, #ff5e4f 0%, #e74c3c 100%);
+}
+
+.double {
+  background: linear-gradient(180deg, #f39c12 0%, #d68910 100%);
+  box-shadow: 0 3px 0 #a6730e, 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.double:not(:disabled):hover {
+  background: linear-gradient(180deg, #f5b041 0%, #f39c12 100%);
+}
+
+@media (min-width: 480px) {
+  .controls {
+    gap: 14px;
+    padding: 16px;
+  }
+  .button {
+    padding: 12px 32px;
+    font-size: 1rem;
+    min-width: 100px;
+  }
+}

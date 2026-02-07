@@ -1,0 +1,102 @@
+.table {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.felt {
+  flex: 1;
+  background:
+    radial-gradient(ellipse at 50% 40%, var(--green-light) 0%, var(--green-felt) 40%, var(--green-dark) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.felt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
+    );
+  pointer-events: none;
+}
+
+.dealerZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.centerZone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.playerZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.potDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 6px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+.potLabel {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.potAmount {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold-light);
+}
+
+@media (min-width: 480px) {
+  .felt {
+    padding: 24px 16px;
+  }
+  .potAmount {
+    font-size: 1.2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .felt {
+    padding: 32px 24px;
+  }
+  .potDisplay {
+    padding: 8px 28px;
+  }
+  .potAmount {
+    font-size: 1.4rem;
+  }
+}
