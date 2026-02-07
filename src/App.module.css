@@ -29,6 +29,18 @@
   overflow: hidden;
 }
 
+.dealerSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.commentWrapper {
+  display: flex;
+  justify-content: center;
+}
+
 .dealerTurnBar {
   display: flex;
   align-items: center;

@@ -5,6 +5,8 @@ import Controls from './components/Controls/Controls.tsx'
 import BettingPanel from './components/BettingPanel/BettingPanel.tsx'
 import ChipDisplay from './components/ChipDisplay/ChipDisplay.tsx'
 import GameResultBanner from './components/GameResult/GameResult.tsx'
+import StrategyAdvisor from './components/StrategyAdvisor/StrategyAdvisor.tsx'
+import DealerPersona from './components/DealerPersona/DealerPersona.tsx'
 import styles from './App.module.css'
 
 export default function App() {
@@ -14,12 +16,15 @@ export default function App() {
     dealerHandState,
     payout,
     canDouble,
+    strategyAdvice,
+    dealerComment,
     setBet,
     deal,
     hit,
     stand,
     doubleDown,
     nextHand,
+    toggleAdvisor,
   } = useBlackjack()
 
   const isBetting = state.phase === 'betting'
@@ -29,7 +34,7 @@ export default function App() {
   return (
     <div className={styles.app}>
       <header className={styles.header}>
-        <span className={styles.title}>Blackjack</span>
+        <span className={styles.title}>Neon Blackjack</span>
         <ChipDisplay amount={state.playerChips} />
       </header>
 
@@ -37,13 +42,20 @@ export default function App() {
         <Table
           betDisplay={isBetting ? 0 : state.currentBet}
           dealerArea={
-            <Hand
-              cards={state.dealerHand}
-              handState={dealerHandState}
-              label="Dealer"
-              isActive={state.phase === 'dealerTurn'}
-              hideScore={state.dealerHand.length === 0}
-            />
+            <div className={styles.dealerSection}>
+              <Hand
+                cards={state.dealerHand}
+                handState={dealerHandState}
+                label="Dealer"
+                isActive={state.phase === 'dealerTurn'}
+                hideScore={state.dealerHand.length === 0}
+              />
+              {dealerComment && (
+                <div className={styles.commentWrapper}>
+                  <DealerPersona comment={dealerComment} />
+                </div>
+              )}
+            </div>
           }
           playerArea={
             <Hand
@@ -62,13 +74,20 @@ export default function App() {
       </div>
 
       {isPlayerTurn && (
-        <Controls
-          onHit={hit}
-          onStand={stand}
-          onDouble={doubleDown}
-          canDouble={canDouble}
-          disabled={false}
-        />
+        <>
+          <Controls
+            onHit={hit}
+            onStand={stand}
+            onDouble={doubleDown}
+            canDouble={canDouble}
+            disabled={false}
+          />
+          <StrategyAdvisor
+            advice={strategyAdvice}
+            visible={state.showAdvisor}
+            onToggle={toggleAdvisor}
+          />
+        </>
       )}
 
       {(isBetting || isResult) && (

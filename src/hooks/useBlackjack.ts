@@ -1,9 +1,10 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
-import type { GameState, GameResult } from '../types/index.ts'
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
+import type { Card, GameState, GameResult, StrategyAdvice, DealerComment } from '../types/index.ts'
 import { INITIAL_CHIPS, MIN_BET, DEALER_DELAY_MS } from '../types/index.ts'
 import { createShuffledDeck, drawCard } from '../engine/deck.ts'
 import { calculateHandState, calculateFullScore } from '../engine/scoring.ts'
 import { shouldDealerHit, canDoubleDown, determineResult, calculatePayout } from '../engine/rules.ts'
+import { getStrategyAdvice, getDealerComment } from '../engine/strategy.ts'
 
 const INITIAL_STATE: GameState = {
   phase: 'betting',
@@ -14,6 +15,7 @@ const INITIAL_STATE: GameState = {
   currentBet: MIN_BET,
   result: null,
   stats: { wins: 0, losses: 0, pushes: 0, blackjacks: 0, handsPlayed: 0 },
+  showAdvisor: false,
 }
 
 function updateStats(stats: GameState['stats'], result: GameResult): GameState['stats'] {
@@ -34,6 +36,7 @@ function updateStats(stats: GameState['stats'], result: GameResult): GameState['
 
 export function useBlackjack() {
   const [state, setState] = useState<GameState>(INITIAL_STATE)
+  const [dealerComment, setDealerComment] = useState<DealerComment | null>(null)
   const dealerTimers = useRef<number[]>([])
 
   const clearTimers = useCallback(() => {
@@ -57,6 +60,7 @@ export function useBlackjack() {
             if (!shouldDealerHit(revealedHand) || fullScore.isBlackjack) {
               const result = determineResult(prev.playerHand, revealedHand)
               const payout = calculatePayout(result, bet)
+              setDealerComment(getDealerComment('result', result))
               return {
                 ...prev,
                 dealerHand: revealedHand,
@@ -79,6 +83,7 @@ export function useBlackjack() {
           if (handState.isBust || !shouldDealerHit(newHand)) {
             const result = determineResult(prev.playerHand, newHand)
             const payout = calculatePayout(result, bet)
+            setDealerComment(getDealerComment('result', result))
             return {
               ...prev,
               deck: remainingDeck,
@@ -113,8 +118,9 @@ export function useBlackjack() {
       const playerHand = []
       const dealerHand = []
 
-      // Deal: player, dealer, player, dealer(face down)
-      let draw = drawCard(deck, true)
+      let draw: { readonly card: Card; readonly remainingDeck: readonly Card[] }
+
+      draw = drawCard(deck, true)
       playerHand.push(draw.card)
       deck = [...draw.remainingDeck]
 
@@ -126,21 +132,20 @@ export function useBlackjack() {
       playerHand.push(draw.card)
       deck = [...draw.remainingDeck]
 
-      draw = drawCard(deck, false) // dealer hole card face down
+      draw = drawCard(deck, false)
       dealerHand.push(draw.card)
       deck = [...draw.remainingDeck]
 
       const playerScore = calculateFullScore(playerHand)
       const dealerVisible = calculateHandState(dealerHand)
 
-      // Check for immediate blackjacks
       if (playerScore.isBlackjack) {
         if (dealerVisible.score === 10 || dealerVisible.score === 11) {
-          // Dealer might also have blackjack, need to reveal
           const revealedDealer = dealerHand.map(c => ({ ...c, faceUp: true }))
           const dealerScore = calculateFullScore(revealedDealer)
           const result = dealerScore.isBlackjack ? 'push' as const : 'playerBlackjack' as const
           const payout = calculatePayout(result, prev.currentBet)
+          setDealerComment(getDealerComment('result', result))
           return {
             ...prev,
             phase: 'result',
@@ -152,8 +157,8 @@ export function useBlackjack() {
             stats: updateStats(prev.stats, result),
           }
         }
-        // Player blackjack, dealer can't have one
         const payout = calculatePayout('playerBlackjack', prev.currentBet)
+        setDealerComment(getDealerComment('result', 'playerBlackjack'))
         return {
           ...prev,
           phase: 'result',
@@ -166,6 +171,7 @@ export function useBlackjack() {
         }
       }
 
+      setDealerComment(getDealerComment('deal'))
       return {
         ...prev,
         phase: 'playerTurn',
@@ -189,6 +195,7 @@ export function useBlackjack() {
       if (handState.isBust) {
         const result: GameResult = 'playerBust'
         const payout = calculatePayout(result, prev.currentBet)
+        setDealerComment(getDealerComment('result', result))
         return {
           ...prev,
           deck: remainingDeck,
@@ -201,8 +208,9 @@ export function useBlackjack() {
         }
       }
 
+      setDealerComment(getDealerComment('hit', undefined, handState.score))
+
       if (handState.score === 21) {
-        // Auto-stand on 21
         return {
           ...prev,
           deck: remainingDeck,
@@ -215,10 +223,11 @@ export function useBlackjack() {
     })
   }, [])
 
-  // After state changes to dealerTurn from hit/stand, trigger dealer logic
   const stand = useCallback(() => {
     setState(prev => {
       if (prev.phase !== 'playerTurn') return prev
+      const playerState = calculateFullScore(prev.playerHand)
+      setDealerComment(getDealerComment('stand', undefined, playerState.score))
       return { ...prev, phase: 'dealerTurn' }
     })
   }, [])
@@ -236,6 +245,7 @@ export function useBlackjack() {
       if (handState.isBust) {
         const result: GameResult = 'playerBust'
         const payout = calculatePayout(result, newBet)
+        setDealerComment(getDealerComment('result', result))
         return {
           ...prev,
           deck: remainingDeck,
@@ -254,7 +264,7 @@ export function useBlackjack() {
         deck: remainingDeck,
         playerHand: newHand,
         currentBet: newBet,
-        playerChips: prev.playerChips - prev.currentBet, // deduct the extra bet
+        playerChips: prev.playerChips - prev.currentBet,
         phase: 'dealerTurn',
       }
     })
@@ -262,6 +272,7 @@ export function useBlackjack() {
 
   const nextHand = useCallback(() => {
     clearTimers()
+    setDealerComment(null)
     setState(prev => ({
       ...prev,
       phase: 'betting',
@@ -271,6 +282,10 @@ export function useBlackjack() {
       currentBet: Math.min(prev.currentBet, Math.floor(prev.playerChips * 0.5 / 100) * 100) || MIN_BET,
     }))
   }, [clearTimers])
+
+  const toggleAdvisor = useCallback(() => {
+    setState(prev => ({ ...prev, showAdvisor: !prev.showAdvisor }))
+  }, [])
 
   // Trigger dealer turn when phase changes to dealerTurn
   const { phase, currentBet } = state
@@ -288,17 +303,32 @@ export function useBlackjack() {
 
   const payout = state.result ? calculatePayout(state.result, state.currentBet) : 0
 
+  // Compute strategy advice during player turn
+  const strategyAdvice: StrategyAdvice | null = useMemo(() => {
+    if (state.phase !== 'playerTurn' || !state.showAdvisor) return null
+    return getStrategyAdvice(
+      state.playerHand,
+      state.dealerHand,
+      state.deck,
+      state.playerChips,
+      state.currentBet
+    )
+  }, [state.phase, state.showAdvisor, state.playerHand, state.dealerHand, state.deck, state.playerChips, state.currentBet])
+
   return {
     state,
     playerHandState,
     dealerHandState,
     payout,
     canDouble: state.phase === 'playerTurn' && canDoubleDown(state.playerHand, state.playerChips, state.currentBet),
+    strategyAdvice,
+    dealerComment,
     setBet,
     deal,
     hit,
     stand,
     doubleDown,
     nextHand,
+    toggleAdvisor,
   }
 }
