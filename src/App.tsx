@@ -44,7 +44,7 @@ export default function App() {
     reset: resetLab,
   } = useSimulationLab()
 
-  const { muted, toggleMute, playChipClick, playButtonPress, playStand: playSfxStand, playDouble: playSfxDouble, hapticLight } = useSoundEffects({
+  const { muted, toggleMute, playChipClick, playChipTick, playButtonPress, playButtonRelease, playStand: playSfxStand, playDouble: playSfxDouble, hapticLight } = useSoundEffects({
     phase: state.phase,
     result: state.result,
     playerCardCount: state.playerHand.length,
@@ -59,7 +59,8 @@ export default function App() {
     playButtonPress()
     hapticLight()
     hit()
-  }, [hit, playButtonPress, hapticLight])
+    setTimeout(playButtonRelease, 80)
+  }, [hit, playButtonPress, playButtonRelease, hapticLight])
 
   const handleStand = useCallback(() => {
     playSfxStand()
@@ -77,18 +78,26 @@ export default function App() {
     playButtonPress()
     hapticLight()
     deal()
-  }, [deal, playButtonPress, hapticLight])
+    setTimeout(playButtonRelease, 80)
+  }, [deal, playButtonPress, playButtonRelease, hapticLight])
 
   const handleNextHand = useCallback(() => {
     playButtonPress()
     hapticLight()
     nextHand()
-  }, [nextHand, playButtonPress, hapticLight])
+    setTimeout(playButtonRelease, 80)
+  }, [nextHand, playButtonPress, playButtonRelease, hapticLight])
 
   const handleBetChange = useCallback((bet: number) => {
-    playChipClick()
+    playChipTick()
     setBet(bet)
-  }, [setBet, playChipClick])
+  }, [setBet, playChipTick])
+
+  const handleQuickBet = useCallback((bet: number) => {
+    playChipClick()
+    hapticLight()
+    setBet(bet)
+  }, [setBet, playChipClick, hapticLight])
 
   if (appMode === 'lab') {
     return (
@@ -179,6 +188,7 @@ export default function App() {
           chips={state.playerChips}
           currentBet={state.currentBet}
           onBetChange={handleBetChange}
+          onQuickBet={handleQuickBet}
           onDeal={handleDeal}
           stats={state.stats}
           isResult={isResult}

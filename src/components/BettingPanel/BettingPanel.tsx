@@ -6,6 +6,7 @@ interface BettingPanelProps {
   readonly chips: number
   readonly currentBet: number
   readonly onBetChange: (bet: number) => void
+  readonly onQuickBet: (bet: number) => void
   readonly onDeal: () => void
   readonly stats: GameStats
   readonly isResult: boolean
@@ -16,6 +17,7 @@ export default function BettingPanel({
   chips,
   currentBet,
   onBetChange,
+  onQuickBet,
   onDeal,
   stats,
   isResult,
@@ -30,7 +32,7 @@ export default function BettingPanel({
   }
 
   function handleQuickBet(amount: number) {
-    onBetChange(Math.min(amount, maxBet))
+    onQuickBet(Math.min(amount, maxBet))
   }
 
   return (

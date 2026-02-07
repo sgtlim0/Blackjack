@@ -12,7 +12,9 @@ import {
   playPush,
   playCardFlip,
   playChipClick,
+  playChipTick,
   playButtonPress,
+  playButtonRelease,
   hapticLight,
   hapticMedium,
   hapticHeavy,
@@ -115,5 +117,5 @@ export function useSoundEffects(triggers: SoundTriggers) {
     }
   }, [triggers, muted])
 
-  return { muted, toggleMute, playChipClick, playButtonPress, playStand, playDouble, hapticLight }
+  return { muted, toggleMute, playChipClick, playChipTick, playButtonPress, playButtonRelease, playStand, playDouble, hapticLight }
 }

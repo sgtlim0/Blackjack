@@ -14,11 +14,34 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  transition: all 80ms ease;
+  transition: transform 80ms ease, box-shadow 80ms ease, filter 80ms ease;
   color: #fff;
   min-width: 80px;
   position: relative;
   transform: translateY(0);
+  overflow: hidden;
+}
+
+/* Shine sweep on hover */
+.button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  transition: left 0.4s ease;
+  pointer-events: none;
+}
+
+.button:not(:disabled):hover::after {
+  left: 120%;
 }
 
 .button:disabled {
@@ -27,15 +50,15 @@
 }
 
 .button:not(:disabled):hover {
-  transform: translateY(-1px);
-  filter: brightness(1.1);
+  transform: translateY(-2px);
+  filter: brightness(1.12);
 }
 
 .button:not(:disabled):active {
   transform: translateY(3px);
   box-shadow: none !important;
-  filter: brightness(0.95);
-  transition: all 30ms ease;
+  filter: brightness(0.92);
+  transition: transform 25ms ease, box-shadow 25ms ease, filter 25ms ease;
 }
 
 .hit {
@@ -45,7 +68,7 @@
 
 .hit:not(:disabled):hover {
   background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
-  box-shadow: 0 5px 0 #145a30, 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 5px 0 #145a30, 0 8px 20px rgba(39, 174, 96, 0.25);
 }
 
 .stand {
@@ -55,7 +78,7 @@
 
 .stand:not(:disabled):hover {
   background: linear-gradient(180deg, #ff5e4f 0%, #e74c3c 100%);
-  box-shadow: 0 5px 0 #922b21, 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 5px 0 #922b21, 0 8px 20px rgba(231, 76, 60, 0.25);
 }
 
 .double {
@@ -65,7 +88,7 @@
 
 .double:not(:disabled):hover {
   background: linear-gradient(180deg, #f5b041 0%, #f39c12 100%);
-  box-shadow: 0 5px 0 #a6730e, 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 5px 0 #a6730e, 0 8px 20px rgba(243, 156, 18, 0.25);
 }
 
 @media (min-width: 480px) {

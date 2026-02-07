@@ -68,20 +68,21 @@
   color: var(--gold-light);
   font-size: 0.75rem;
   font-weight: 600;
-  transition: all 80ms ease;
+  transition: transform 80ms ease, background 80ms ease, border-color 80ms ease, box-shadow 80ms ease;
   transform: scale(1);
 }
 
 .quickBetChip:not(:disabled):hover {
   background: rgba(201, 168, 76, 0.25);
   border-color: var(--gold);
-  transform: scale(1.05);
+  transform: scale(1.08);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.2);
 }
 
 .quickBetChip:not(:disabled):active {
-  transform: scale(0.92);
-  background: rgba(201, 168, 76, 0.35);
-  transition: all 30ms ease;
+  transform: scale(0.88);
+  background: rgba(201, 168, 76, 0.4);
+  transition: transform 25ms ease, background 25ms ease;
 }
 
 .quickBetChip:disabled {
@@ -100,21 +101,45 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   box-shadow: 0 4px 0 #7a6020, 0 6px 16px rgba(0, 0, 0, 0.35);
-  transition: all 80ms ease;
+  transition: transform 80ms ease, box-shadow 80ms ease, filter 80ms ease;
   transform: translateY(0);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shine sweep */
+.dealButton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 100%
+  );
+  transition: left 0.4s ease;
+  pointer-events: none;
+}
+
+.dealButton:not(:disabled):hover::after {
+  left: 120%;
 }
 
 .dealButton:not(:disabled):hover {
   background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 5px 0 #7a6020, 0 8px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #7a6020, 0 10px 24px rgba(201, 168, 76, 0.2);
 }
 
 .dealButton:not(:disabled):active {
   transform: translateY(4px);
   box-shadow: none;
-  filter: brightness(0.95);
-  transition: all 30ms ease;
+  filter: brightness(0.92);
+  transition: transform 25ms ease, box-shadow 25ms ease, filter 25ms ease;
 }
 
 .dealButton:disabled {
