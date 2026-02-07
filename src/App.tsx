@@ -1,6 +1,7 @@
-import { useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useBlackjack } from './hooks/useBlackjack.ts'
 import { useSoundEffects } from './hooks/useSoundEffects.ts'
+import { useSimulationLab } from './hooks/useSimulationLab.ts'
 import Table from './components/Table/Table.tsx'
 import Hand from './components/Hand/Hand.tsx'
 import Controls from './components/Controls/Controls.tsx'
@@ -9,9 +10,14 @@ import ChipDisplay from './components/ChipDisplay/ChipDisplay.tsx'
 import GameResultBanner from './components/GameResult/GameResult.tsx'
 import StrategyAdvisor from './components/StrategyAdvisor/StrategyAdvisor.tsx'
 import DealerPersona from './components/DealerPersona/DealerPersona.tsx'
+import SimulationLab from './components/SimulationLab/SimulationLab.tsx'
 import styles from './App.module.css'
 
+type AppMode = 'play' | 'lab'
+
 export default function App() {
+  const [appMode, setAppMode] = useState<AppMode>('play')
+
   const {
     state,
     playerHandState,
@@ -28,6 +34,15 @@ export default function App() {
     nextHand,
     toggleAdvisor,
   } = useBlackjack()
+
+  const {
+    labState,
+    setHandCount,
+    toggleDifficulty,
+    runSimulation,
+    cancel: cancelLab,
+    reset: resetLab,
+  } = useSimulationLab()
 
   const { muted, toggleMute, playChipClick, playButtonPress, playStand: playSfxStand, playDouble: playSfxDouble, hapticLight } = useSoundEffects({
     phase: state.phase,
@@ -75,11 +90,31 @@ export default function App() {
     setBet(bet)
   }, [setBet, playChipClick])
 
+  if (appMode === 'lab') {
+    return (
+      <SimulationLab
+        labState={labState}
+        onSetHandCount={setHandCount}
+        onToggleDifficulty={toggleDifficulty}
+        onRun={runSimulation}
+        onCancel={cancelLab}
+        onReset={resetLab}
+        onBack={() => setAppMode('play')}
+      />
+    )
+  }
+
   return (
     <div className={styles.app}>
       <header className={styles.header}>
         <span className={styles.title}>Neon Blackjack</span>
         <div className={styles.headerRight}>
+          <button
+            className={styles.labButton}
+            onClick={() => setAppMode('lab')}
+          >
+            AI Lab
+          </button>
           <button className={styles.muteButton} onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}>
             {muted ? '\uD83D\uDD07' : '\uD83D\uDD0A'}
           </button>
