@@ -9,32 +9,43 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 16px;
+  padding: 8px 12px;
   background: var(--bg-secondary);
   border-bottom: 1px solid rgba(201, 168, 76, 0.15);
   z-index: 10;
+  gap: 8px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 .title {
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   color: var(--gold);
+  white-space: nowrap;
 }
 
 .headerRight {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .labButton {
   background: rgba(52, 152, 219, 0.12);
   border: 1px solid rgba(52, 152, 219, 0.35);
   border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 0.7rem;
+  padding: 4px 8px;
+  font-size: 0.6rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -52,24 +63,29 @@
   transform: scale(0.92);
 }
 
-.muteButton {
+.iconButton {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 0.85rem;
+  padding: 3px 6px;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  transition: all var(--transition);
+  transition: all 80ms ease;
   line-height: 1;
 }
 
-.muteButton:hover {
-  border-color: rgba(255, 255, 255, 0.25);
+.iconButton:hover {
+  border-color: rgba(255, 255, 255, 0.2);
   color: var(--text-primary);
 }
 
-.muteButton:active {
+.iconButton:active {
   transform: scale(0.9);
+}
+
+.iconActive {
+  border-color: rgba(201, 168, 76, 0.4);
+  background: rgba(201, 168, 76, 0.1);
 }
 
 .tableWrapper {
@@ -110,10 +126,22 @@
 
 @media (min-width: 480px) {
   .header {
-    padding: 10px 20px;
+    padding: 10px 16px;
+    gap: 10px;
   }
   .title {
-    font-size: 1.15rem;
+    font-size: 1rem;
+  }
+  .headerRight {
+    gap: 8px;
+  }
+  .labButton {
+    padding: 4px 10px;
+    font-size: 0.65rem;
+  }
+  .iconButton {
+    padding: 4px 8px;
+    font-size: 0.8rem;
   }
 }
 
@@ -122,6 +150,6 @@
     padding: 12px 24px;
   }
   .title {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
   }
 }

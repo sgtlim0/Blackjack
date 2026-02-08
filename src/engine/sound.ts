@@ -325,6 +325,27 @@ export function playPush() {
   }, 160)
 }
 
+// ─── Progression Sounds ──────────────────────────────────
+
+export function playLevelUp() {
+  // Ascending major scale fanfare
+  const notes = [523, 587, 659, 784, 1047]
+  notes.forEach((freq, i) => {
+    setTimeout(() => {
+      playTone(freq, 0.25, 'sine', 0.1, 0.005, 0.08)
+      playTone(freq * 1.5, 0.2, 'sine', 0.04, 0.01, 0.06)
+    }, i * 80)
+  })
+  setTimeout(() => playSweep(1000, 4000, 0.4, 0.025), 300)
+}
+
+export function playStreakUp() {
+  // Quick ascending ping
+  playMetallicPing(1500, 0.04)
+  setTimeout(() => playMetallicPing(2000, 0.035), 60)
+  setTimeout(() => playTone(2500, 0.06, 'sine', 0.03, 0.005, 0.02), 110)
+}
+
 // ─── Sequences ───────────────────────────────────────────
 
 export function playDealSequence() {
